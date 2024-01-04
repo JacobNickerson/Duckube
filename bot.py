@@ -2,27 +2,38 @@ import discord
 from dotenv import load_dotenv
 import os
 
-
-class MyClient(discord.Client):
+class DuckBot(discord.Client):
     async def on_ready(self):
-        print(f'Logged on as {self.user}!')
+        await tree.sync(guild=discord.Object(id=server_token))
+        channel = self.get_channel(server_token)
+        print(f'{self.user} is quacking!')
+    
 
     async def on_message(self, message):
         print(f'Message from {message.author}: {message.content}')
-    
+        if message.author.id == self.user.id:
+            return
+        
+        if message.content.startswith('!help'):
+            await message.channel.send("Check your DMs :duck:")
+
+
+class MyTree(discord.app_commands.CommandTree):
+    def add_commands(self):
+        @self.command(name="testcommand", 
+            description="a fake command for testing")
+        
+        async def first_command(interaction):
+            await interaction.response.send_message("WOAH!!!")
+        
+load_dotenv()
+token = os.getenv("discord_token")
+server_token = os.getenv("server_token")
 
 intents = discord.Intents.default()
 intents.message_content = True
-
-load_dotenv()
-token = os.getenv('discord_token')
-client = MyClient(intents=intents)
-client.run(token)
+bot = DuckBot(intents=intents)
+tree = MyTree
 
 
-server_token = os.getenv('guild_token')
-@MyClient.event
-async def on_ready():
-    for guild in MyClient.guilds:
-        if guild.name == server_token:
-            break
+bot.run(token)
