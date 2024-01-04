@@ -1,6 +1,7 @@
-import os
-import dotenv
+import re
 
-dotenv.load_dotenv()
-token = os.getenv('discord_token')
-print(token)
+wanted_text = '<meta content="Dirt is a block found abundantly in most biomes under a layer of grass blocks at the top of the Overworld." name="description"/>'
+if matches := re.search(r'meta content="(.+)" name="description"', wanted_text):
+    print(matches.group(1))
+else:
+    print("You didn't find it dipshit")
