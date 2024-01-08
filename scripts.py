@@ -5,7 +5,7 @@ import re
 
 def wiki_scrape(item_name):
     found = False
-    item_data = {}
+    item_data = {"error": False}
     while found == False:
         url = f"https://minecraft.wiki/?search={item_name.replace(" ", "+")}"
         wiki_html = requests.get(url).text
@@ -34,7 +34,6 @@ def wiki_scrape(item_name):
         item_data["crafting_recipe"] = crafting_recipe.group(1)
 
         
-
     return item_data
 
 
