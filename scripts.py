@@ -22,18 +22,19 @@ def wiki_scrape(item_name):
             item_data["url"] = url
 
     if not_found := re.search(f"<title>Search results for \"{item_name}\" – Minecraft Wiki</title>", str(soup)):
-        return {"error": True}
+        return {"error": True, "item_name": item_name}
     
     if title := re.search(r"<title>(.+) – Minecraft Wiki</title>", str(soup)):
         item_data["title"] = title.group(1)
     if description := re.search(r"content=\"(.+)\" name=\"description\"", str(soup)):
         item_data["description"] = description.group(1)
+    else:
+        return {"error": True, "item_name": item_name}
     if block_image := re.search(r"content=\"(.+)\" property=\"og:image\"", str(soup)):
         item_data["image"] = block_image.group(1)
     if crafting_recipe := re.search(r"stink butt weiner", str(soup)):
         item_data["crafting_recipe"] = crafting_recipe.group(1)
 
-        
     return item_data
 
 
