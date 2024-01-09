@@ -36,12 +36,3 @@ def wiki_scrape(item_name):
         item_data["crafting_recipe"] = crafting_recipe.group(1)
 
     return item_data
-
-
-def main():
-    block_name = input("Input: ")
-    print(wiki_scrape(block_name))
-
-
-if __name__ == "__main__":
-    main()
