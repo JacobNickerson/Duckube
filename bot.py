@@ -4,7 +4,6 @@ import os
 from dotenv import load_dotenv
 import scripts
 import asyncio
-import ffmpeg
 
 
 # initializing bot, command tree, and tokens
