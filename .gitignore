@@ -1,2 +1,5 @@
 venv/
 .env
+__pycache__
+test_file.py
+ffmpeg/
