@@ -4,13 +4,16 @@ import os
 from dotenv import load_dotenv
 import scripts
 import asyncio
+#import mcrcon
+import subprocess
 
 
 # initializing bot, command tree, and tokens
 load_dotenv()
 token = os.getenv("discord_token")
 server_token = os.getenv("minecraft_server_token")
-bot = commands.Bot(command_prefix="/", intents=discord.Intents.default())
+admin = os.getenv("owner_token")
+bot = commands.Bot(command_prefix="/", intents=discord.Intents.default(), owner_id=admin)
 
 
 # bot is ready
@@ -24,7 +27,6 @@ async def on_ready():
                   description="""Searches minecraft.wiki for basic information about a specific block.""",
                   guild=discord.Object(id=server_token)
                   )
-
 async def search(ctx, item_name: str):
     item_data = scripts.wiki_scrape(item_name)
     if item_data["error"]:
@@ -39,7 +41,6 @@ async def search(ctx, item_name: str):
                   description="""Accepts a location name and coordinates and sends a formatted message to the coordinates chat.""",
                   guild=discord.Object(id=server_token)
                   )
-
 async def waypoint(ctx, location_name: str, x_coord: str, y_coord: str, z_coord: str, nether: bool):
     if nether:
         channel = bot.get_channel(1194042960958988319)
@@ -58,7 +59,6 @@ async def waypoint(ctx, location_name: str, x_coord: str, y_coord: str, z_coord:
                   description=":)",
                   guild=discord.Object(id=server_token)
                   )
-
 async def quack(ctx):
     try:
         voice_channel = ctx.user.voice.channel
@@ -67,10 +67,25 @@ async def quack(ctx):
         return None
     await ctx.response.send_message("Q U A C K", ephemeral=True)
     vc = await voice_channel.connect()
-    vc.play(discord.FFmpegPCMAudio(source="quack.mp3", executable="ffmpeg/bin/ffmpeg.exe"), after=lambda e: print("LATER", e))
+    vc.play(discord.FFmpegPCMAudio(source="quack.mp3", executable="ffmpeg/bin/ffmpeg.exe"))
     while vc.is_playing():
         await asyncio.sleep(1)
     await vc.disconnect()
+    
+
+@bot.tree.command(name="start_server", 
+                  description="Starts the server.", 
+                  guild=discord.Object(id=server_token)
+                  )
+@discord.app_commands.checks.has_permissions(administrator = True)
+async def server_restart(interaction: discord.Interaction):
+    server_directory = os.getenv("directory")
+    p = subprocess.Popen(server_directory, creationflags=subprocess.CREATE_NEW_CONSOLE)
+    await interaction.response.send_message("Server initializing...", ephemeral=True)
+@server_restart.error
+async def server_restart_error(ctx, error):
+    if isinstance(error, discord.app_commands.MissingPermissions):
+        await ctx.response.send_message("You do not have permission to start the server.", ephemeral=True)
 
 
 bot.run(token)
