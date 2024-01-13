@@ -8,6 +8,13 @@ Duck themed discord bot intended for private use on the Sling Bingers minecraft 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+### Written In
+
+[![Python][Python-shield]][Python-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -55,3 +62,9 @@ Jacob Nickerson - jacobnickerson817@gmail.com
 Project Link: [https://github.com/JacobNickerson/Duckube](https://github.com/JacobNickerson/Duckube)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[python-shield]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+[python-url]: https://www.python.org/
+
