@@ -59,19 +59,36 @@ async def waypoint(ctx, location_name: str, x_coord: str, y_coord: str, z_coord:
                   description=":)",
                   guild=discord.Object(id=server_token)
                   )
-async def quack(ctx):
+async def quack(ctx, count: int=1):
     try:
         voice_channel = ctx.user.voice.channel
     except AttributeError:
         await ctx.response.send_message("You're not in a voice channel!", ephemeral=True)
         return None
-    await ctx.response.send_message("Q U A C K", ephemeral=True)
+    global vc
     vc = await voice_channel.connect()
-    vc.play(discord.FFmpegPCMAudio(source="quack.mp3", executable="ffmpeg/bin/ffmpeg.exe"))
-    while vc.is_playing():
-        await asyncio.sleep(1)
+    await ctx.response.send_message("Q U A C K", ephemeral=True)
+    for _ in range(0,count):
+        vc.play(discord.FFmpegPCMAudio(source="quack.mp3", executable="ffmpeg/bin/ffmpeg.exe"))
+        while vc.is_playing():
+            await asyncio.sleep(1)
     await vc.disconnect()
-    
+
+
+@bot.tree.command(name="silence",
+                  description="Silences the quacks.", 
+                  guild=discord.Object(id=server_token)
+                  )
+async def silence(ctx):
+    try:
+        if vc.is_playing():
+            await vc.disconnect()
+            await ctx.response.send_message("Sorry...", ephemeral=True)
+        else:
+            await ctx.response.send_message("I'm not quacking right now.", ephemeral=True)
+    except NameError:
+        await ctx.response.send_message("I'm not quacking right now.", ephemeral=True)
+
 
 @bot.tree.command(name="start_server", 
                   description="Starts the server.", 
