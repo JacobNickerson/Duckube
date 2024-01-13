@@ -19,10 +19,9 @@ All necessary libraries are included in requirements.txt; FFMPEG is also require
   ```sh
   pip -r requirements.txt
   ```
-* ffmpeg
+* [FFMPEG](https://ffmpeg.org/download.html)
   ```sh
   Download from: https://ffmpeg.org/download.html
-  Move ffmpeg folder to duckube directory
   ```
 
 ### Installation
@@ -35,11 +34,8 @@ All necessary libraries are included in requirements.txt; FFMPEG is also require
    ```sh
    pip -r requirements.txt
    ```
-3. Install FFMPEG and move FFMPEG to Duckube directory
-   ```sh
-   https://ffmpeg.org/download.html
-   ```
-
+3. Install [FFMPEG](https://ffmpeg.org/download.html) into the cloned repository
+   
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
