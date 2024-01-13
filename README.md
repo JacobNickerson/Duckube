@@ -3,7 +3,7 @@
 
 Duckube
 
-Duck themed discord bot intended for private use on the Sling Bingers minecraft server.
+Duck-themed discord bot created using the Pycord library, intended for private use on the Sling Bingers minecraft server.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -44,7 +44,7 @@ All necessary libraries are included in requirements.txt; FFMPEG is also require
    ```
 3. Install [FFMPEG](https://ffmpeg.org/download.html) into the cloned repository
 4. Discord Bot Token should be obtained from Discord application developer portal
-5. Create a file named ".env" and write
+5. Create a file named ".env" and enter the following variables:
    ```sh
    discord_token=bot_token_here
    discord_server_token=discord_guild_token_here
