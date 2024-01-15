@@ -56,6 +56,7 @@ All necessary libraries are included in requirements.txt; FFMPEG is also require
    directory=server_jar_location_here
    coords_channel_id=channel_id_for_overworld_coordinates_chat
    nether_channel_id=channel_id_for_nether_coordinates_chat
+   mods_directory=mods.zip_location_here
    ```
    
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
