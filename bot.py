@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import os
 from dotenv import load_dotenv
-import scripts
+import src.scripts as scripts
 import asyncio
 import subprocess
 
@@ -20,9 +20,10 @@ Guild = discord.Object(id=server_token)
 # bot is ready
 @bot.event
 async def on_ready():
+    await bot.load_extension("cogs.test")
     await bot.tree.sync(guild=Guild)
     print(f"{bot.user} is quacking!")
-
+    
 
 @bot.tree.command(name="search",
                   description="""Searches minecraft.wiki for basic information about a specific block""",
@@ -70,7 +71,7 @@ async def quack(ctx, count: int=1):
     vc = await voice_channel.connect()
     await ctx.response.send_message("Q U A C K", ephemeral=True)
     for _ in range(0,count):
-            vc.play(discord.FFmpegPCMAudio(source="quack.mp3", executable="ffmpeg/bin/ffmpeg.exe"))
+            vc.play(discord.FFmpegPCMAudio(source="src/quack.mp3", executable="ffmpeg/bin/ffmpeg.exe"))
             while vc.is_playing():
                 await asyncio.sleep(1)
     await vc.disconnect()
@@ -99,7 +100,7 @@ async def silence(ctx):
 async def start_server(interaction: discord.Interaction):
     server_directory = os.getenv("directory")
     global p
-    p = subprocess.Popen(server_directory, stdin=subprocess.PIPE, text=True)
+    p = subprocess.Popen(server_directory, creationflags=subprocess.CREATE_NEW_CONSOLE ,stdin=subprocess.PIPE, text=True)
     await interaction.response.send_message("Server initializing...", ephemeral=True)
 @start_server.error
 async def start_server_error(ctx, error):
@@ -142,9 +143,11 @@ async def command_error(ctx, error):
                   description="Requests necessary server mods",
                   guild=Guild)
 async def mods(interaction: discord.Interaction):
-    user = await interaction.user.create_dm()
-    await user.send(r"Install contents of the .zip into .minecraft\mods; latest version of Fabric for Minecraft 1.20.1 required", file=discord.File(mods_directory)) 
-    await interaction.response.send_message("Check your DMs :)", ephemeral=True)
+    mods = [r"mods.zip", r"fabric-installer.exe"]
+    files_to_send = []
+    for filename in mods:
+        files_to_send.append(discord.File(mods_directory + filename))
+    await interaction.response.send_message(r"Install contents of the .zip into .minecraft\mods; latest version of Fabric for Minecraft 1.20.1 required", files=files_to_send, ephemeral=True)
 
 
 bot.run(token)
