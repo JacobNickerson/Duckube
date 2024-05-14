@@ -58,6 +58,10 @@ All necessary libraries are included in requirements.txt; FFMPEG is also require
    nether_channel_id=channel_id_for_nether_coordinates_chat
    mods_directory=mods.zip_location_here
    ```
+7. For the start_server command specifically, include the following line in your server_start.bat:
+   ```
+   cd "server_directory\here\"
+   ```
    
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

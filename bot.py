@@ -8,13 +8,14 @@ import subprocess
 
 
 # initializing bot, command tree, and tokens
-load_dotenv()
+load_dotenv(override=True)
 token = os.getenv("discord_token")
 server_token = os.getenv("discord_server_token")
 admin = os.getenv("owner_token")
 bot = commands.Bot(command_prefix="/", intents=discord.Intents.default(), owner_id=admin)
 mods_directory = os.getenv("mods_directory")
 Guild = discord.Object(id=server_token)
+p = None
 
 
 # bot is ready
@@ -31,7 +32,8 @@ async def on_ready():
 async def search(ctx, item_name: str):
     item_data = scripts.wiki_scrape(item_name)
     if item_data["error"]:
-        await ctx.response.send_message(f"{item_data["item_name"].replace("+", " ").title()} was not found!", ephemeral=True)
+        await ctx.response.send_message(f"Nothing was found for: {item_name}", ephemeral=True)
+        #await ctx.response.send_message(f"{item_data["item_name"].replace("+", " ").title()} was not found!", ephemeral=True)
     else:
         embed=discord.Embed(title=item_data["title"], url=item_data["url"], description=item_data["description"])
         embed.set_thumbnail(url=item_data["image"])
@@ -42,13 +44,9 @@ async def search(ctx, item_name: str):
                   description="""Accepts a location name and coordinates and sends a formatted message to the coordinates chat""",
                   guild=Guild
                   )
-async def waypoint(ctx, location_name: str, x_coord: str, y_coord: str, z_coord: str, nether: bool):
-    if nether:
-        channel = bot.get_channel(os.getenv("nether_channel_id"))
-        channel_name = "nether_coords"
-    else:
-        channel = bot.get_channel(os.getenv("coords_channel_id"))
-        channel_name = "cool_coords"
+async def waypoint(ctx, location_name: str, x_coord: str, y_coord: str, z_coord: str):
+    channel = bot.get_channel(int(os.getenv("coords_channel_id")))
+    channel_name = "coordinates"
     
     await channel.send(f"""
 # {location_name.title()}
@@ -99,7 +97,7 @@ async def silence(ctx):
 async def start_server(interaction: discord.Interaction):
     server_directory = os.getenv("directory")
     global p
-    p = subprocess.Popen(server_directory, stdin=subprocess.PIPE, text=True)
+    p = subprocess.Popen(server_directory, creationflags=subprocess.CREATE_NEW_CONSOLE, stdin=subprocess.PIPE, text=True)
     await interaction.response.send_message("Server initializing...", ephemeral=True)
 @start_server.error
 async def start_server_error(ctx, error):
@@ -143,8 +141,12 @@ async def command_error(ctx, error):
                   guild=Guild)
 async def mods(interaction: discord.Interaction):
     user = await interaction.user.create_dm()
-    await user.send(r"Install contents of the .zip into .minecraft\mods; latest version of Fabric for Minecraft 1.20.1 required", file=discord.File(mods_directory)) 
+    await user.send(r"Install Prominence II using a modpack installer, recommended: https://www.curseforge.com/download/app or https://prismlauncher.org/download")
+    await user.send(r"Prominence II: https://www.curseforge.com/minecraft/modpacks/prominence-2-rpg or https://modrinth.com/modpack/prominence-2-fabric")
+    await user.send(r"Make sure you install version 2.8.0hf for Fabric 1.20.1!!!") 
     await interaction.response.send_message("Check your DMs :)", ephemeral=True)
 
 
+
 bot.run(token)
+
