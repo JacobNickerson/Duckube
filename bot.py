@@ -15,7 +15,6 @@ admin = os.getenv("owner_token")
 bot = commands.Bot(command_prefix="/", intents=discord.Intents.default(), owner_id=admin)
 mods_directory = os.getenv("mods_directory")
 Guild = discord.Object(id=server_token)
-p = None
 
 
 # bot is ready
