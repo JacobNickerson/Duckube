@@ -121,11 +121,11 @@ async def stop_server_error(ctx, error):
 
 
 @bot.tree.command(name="command", 
-                  description="Passes a string input as a command to the minecraft server",
+                  description="Passes a string input as a command to the minecraft server, string is prefaced with '/'",
                   guild=Guild)
 @discord.app_commands.checks.has_permissions(administrator = True)
 async def command(interaction: discord.Interaction, server_command: str):
-    p.stdin.write(server_command + "\n")
+    p.stdin.write("/" + server_command + "\n")
     p.stdin.flush()
     #console = p.stdout.read()
     await interaction.response.send_message("Command sent", ephemeral=True)
