@@ -140,11 +140,53 @@ async def command_error(ctx, error):
                   guild=Guild)
 async def mods(interaction: discord.Interaction):
     user = await interaction.user.create_dm()
-    await user.send(r"Install Prominence II using a modpack installer, recommended: https://www.curseforge.com/download/app or https://prismlauncher.org/download")
-    await user.send(r"Prominence II: https://www.curseforge.com/minecraft/modpacks/prominence-2-rpg or https://modrinth.com/modpack/prominence-2-fabric")
-    await user.send(r"Make sure you install version 2.8.0hf for Fabric 1.20.1!!!") 
+    await user.send(r"Download the custom mod pack from https://www.mediafire.com/file/3fehibv354shjwn/TheNewModPack.zip/file")
+    await user.send(r"Make sure you install Fabric 1.20.1 from https://fabricmc.net/use/installer/")
     await interaction.response.send_message("Check your DMs :)", ephemeral=True)
 
+
+@bot.tree.command(name="stats",
+                  description="""Displays current server statistics""",
+                  guild=Guild
+                  )
+async def stats(ctx):
+    stats = scripts.pull_API_stats()
+    if stats[0] == 1: # Error
+        await ctx.response.send_message(f"Request failed with status code {stats[1]}.", ephemeral=True)
+    else:
+        data = stats[1]
+        if data["online"] == True:
+            embed = discord.Embed(title=f"{os.getenv("minecraft_server_name")}",
+                      description=f"{data["motd"]["clean"]}")
+
+            embed.add_field(name="Server Status",
+                            value="The server is currently running!",
+                            inline=False)
+            embed.add_field(name="Server Address",
+                            value=f"Join the server by connecting to {os.getenv("minecraft_server_ip")}:{os.getenv("minecraft_server_port")} !",
+                            inline=False)
+            embed.add_field(name="Server Version",
+                            value=f"The server is currently running on version {data["version"]}.",
+                            inline=False)
+            embed.add_field(name="Players",
+                            value=f"Currently there are {data["players"]["online"]} players out of a maximum of {data["players"]["max"]} online!",
+                            inline=False)
+
+            embed.set_thumbnail(url=os.getenv("minecraft_server_image_link"))
+
+            embed.set_footer(text="Stats from API.mcsrvstat.us")
+        else:   
+            embed = discord.Embed(title=f"{os.getenv("minecraft_server_name")}")
+
+            embed.add_field(name="Server Status",
+                            value="The server is currently down!",
+                            inline=False)
+
+            embed.set_thumbnail(url=os.getenv("minecraft_server_image_link"))
+
+            embed.set_footer(text="Stats from API.mcsrvstat.us")
+
+        await ctx.response.send_message(embed=embed, ephemeral=True)
 
 
 bot.run(token)

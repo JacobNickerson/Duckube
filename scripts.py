@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-
+import os
+import json
 
 def wiki_scrape(item_name):
     found = False
@@ -32,3 +33,13 @@ def wiki_scrape(item_name):
         return {"error": True, "item_name": item_name}
 
     return item_data
+
+def pull_API_stats():
+    url = f"https://api.mcsrvstat.us/3/{os.getenv("minecraft_server_ip")}:{os.getenv("minecraft_server_port")}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        # Parsing the JSON content
+        data = response.json()
+        return [0, data]
+    else:
+        return [1, response.status_code]
